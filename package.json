@@ -1,0 +1,16 @@
+{
+    "name": "os-v3-webhook-demo",
+    "scripts": {
+        "dev": "bun run --hot src/server.tsx",
+        "client": "bun build --watch src/client.tsx --outdir ./public",
+        "fmt": "prettier --check src/",
+        "types": "tsc --noEmit",
+        "check": "npm run fmt && npm run lint && npm run types"
+    },
+    "dependencies": {
+        "hono": "^4.9.6"
+    },
+    "devDependencies": {
+        "@types/bun": "latest"
+    }
+}
