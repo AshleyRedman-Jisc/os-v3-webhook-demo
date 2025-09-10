@@ -8,7 +8,8 @@
         "check": "npm run fmt && npm run lint && npm run types"
     },
     "dependencies": {
-        "hono": "^4.9.6"
+        "hono": "^4.9.6",
+        "zod": "^4.1.5"
     },
     "devDependencies": {
         "@types/bun": "latest"

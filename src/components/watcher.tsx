@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'hono/jsx';
 
+type Data = { id: number; data: string };
+
 export function Watcher() {
-    const [data, setData] = useState<string[]>([]);
+    const [data, setData] = useState<Data[]>([]);
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await fetch('/data');
-                const json = (await res.json()) as { data: string };
-                setData((prev) => [...prev, json.data]);
+                const res = await fetch('/get-my-data');
+                const json = (await res.json()) as Data[];
+                setData(json);
             } catch (err) {
                 console.error('Fetch error:', err);
             }
@@ -20,9 +22,9 @@ export function Watcher() {
 
     return (
         <ul class="list-disc pl-5">
-            {data.map((item, index) => (
-                <li key={index}>
-                    {index + 1}. {item}
+            {data.map((item) => (
+                <li key={item.id}>
+                    ID:{item.id}. {item.data}
                 </li>
             ))}
         </ul>

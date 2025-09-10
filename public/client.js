@@ -1856,9 +1856,9 @@ function Watcher() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch("/data");
+        const res = await fetch("/get-my-data");
         const json = await res.json();
-        setData((prev) => [...prev, json.data]);
+        setData(json);
       } catch (err) {
         console.error("Fetch error:", err);
       }
@@ -1869,13 +1869,14 @@ function Watcher() {
   }, []);
   return /* @__PURE__ */ jsxDEV2("ul", {
     class: "list-disc pl-5",
-    children: data.map((item, index) => /* @__PURE__ */ jsxDEV2("li", {
+    children: data.map((item) => /* @__PURE__ */ jsxDEV2("li", {
       children: [
-        index + 1,
+        "ID:",
+        item.id,
         ". ",
-        item
+        item.data
       ]
-    }, index, true, undefined, this))
+    }, item.id, true, undefined, this))
   }, undefined, false, undefined, this);
 }
 
