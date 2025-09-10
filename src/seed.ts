@@ -6,3 +6,5 @@ export const seed = db.query(
     data json
     );`
 );
+
+db.query('delete from responses;').run();
