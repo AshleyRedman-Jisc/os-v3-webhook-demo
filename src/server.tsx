@@ -2,8 +2,8 @@ import { serveStatic } from 'hono/bun';
 import * as z from 'zod/mini';
 import { Hono } from 'hono';
 
+import { accept, retrieve, verifySignature } from './data';
 import { Document } from './components/document';
-import { accept, retrieve } from './data';
 import { App } from './components/app';
 import { seed } from './seed';
 
@@ -24,10 +24,31 @@ app.post('/give-me-data', async function (c) {
     const response = z.object({ survey: z.string(), response: z.any() });
 
     try {
-        const body = await c.req.json();
-        const { success, data, error } = response.safeParse(body);
+        const rawBody = await c.req.text();
+        const signature = c.req.header('X-Webhook-Signature');
 
-        console.log({ data });
+        // {
+        // rawBody: "{\"survey\":\"test\",\"response\":{\"cmfkwmr6o00013b7349vq3rfg\":89578}}",
+        // signature: "t=1757939078,v1=bbb0c0ad039b29b3fd03ba35833e18efcaefaaa744993f6fc0464368008deb26",
+        // }
+        console.log({ rawBody, signature });
+
+        if (!signature) {
+            return c.json({ status: 'No signature provided' }, 400);
+        }
+
+        // our verificatiom
+        const verified = verifySignature(rawBody, signature, process.env.WEBHOOK_SECRET!, 400);
+
+        console.log({ verified });
+
+        if (!verified) {
+            return c.json({ status: 'Failed to verify' }, 400);
+        }
+
+        // their verifification
+        const body = await c.req.json(); // we can not safely parse the body as we know...
+        const { success, data, error } = response.safeParse(body);
 
         if (!success) {
             return c.json({ status: 'Bad data', error }, 400);
@@ -52,6 +73,7 @@ app.get('/get-my-data', async function (c) {
 });
 
 seed.run();
+console.log(process.env);
 
 export default {
     port: 3001,
