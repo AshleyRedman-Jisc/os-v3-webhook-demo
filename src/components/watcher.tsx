@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'hono/jsx';
 
-type Data = { id: number; data: string };
+type Data = Record<any, any>;
 
 export function Watcher() {
     const [data, setData] = useState<Data[]>([]);
@@ -24,7 +24,10 @@ export function Watcher() {
         <ul class="list-disc pl-5">
             {data.map((item) => (
                 <li key={item.id}>
-                    ID:{item.id}. {item.data}
+                    <div>ID:{item.id}.</div>
+                    <pre>
+                        <code>{item.data}</code>
+                    </pre>
                 </li>
             ))}
         </ul>

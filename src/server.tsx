@@ -21,11 +21,13 @@ app.get('/', function (c) {
 });
 
 app.post('/give-me-data', async function (c) {
-    const response = z.object({ id: z.string(), response: z.string() });
+    const response = z.object({ survey: z.string(), response: z.any() });
 
     try {
         const body = await c.req.json();
         const { success, data, error } = response.safeParse(body);
+
+        console.log({ data });
 
         if (!success) {
             return c.json({ status: 'Bad data', error }, 400);
